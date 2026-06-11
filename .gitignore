@@ -1,0 +1,19 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.dSYM/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Coverage / profiling
+*.gcno
+*.gcda
+*.prof
+
+# Generated docs
+docs/html/
+docs/latex/

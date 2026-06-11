@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        cc:  [clang, gcc]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install clang (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt-get update && sudo apt-get install -y clang
+
+    - name: Build
+      run: make CC=${{ matrix.cc }} -j4
+
+    - name: Test
+      run: make test
+
+    - name: Bench (small N, 100k)
+      run: make bench N=100000
+
+    - name: Install cppcheck (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt-get install -y cppcheck
+
+    - name: Static analysis
+      if: matrix.os == 'ubuntu-latest'
+      run: cppcheck --enable=warning,style --error-exitcode=1 src include
