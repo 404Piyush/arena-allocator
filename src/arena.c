@@ -4,7 +4,19 @@
  * small `arena` struct (so the user gets a typed handle); the
  * rest is the bump region.
  */
-#define _POSIX_C_SOURCE 200809L
+
+/* Feature-test macro selection:
+ *   - On glibc (Linux), _POSIX_C_SOURCE 200809L is not enough to
+ *     expose CLOCK_MONOTONIC and MAP_ANONYMOUS, so we need
+ *     _GNU_SOURCE (or _DEFAULT_SOURCE).
+ *   - On macOS, defining _POSIX_C_SOURCE 200809L actually hides
+ *     BSD-only symbols (like MAP_ANONYMOUS), so we leave the
+ *     default (none).
+ */
+#if defined(__linux__)
+#  define _DEFAULT_SOURCE
+#  define _POSIX_C_SOURCE 200809L
+#endif
 
 #include "arena.h"
 
