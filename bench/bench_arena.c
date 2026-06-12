@@ -5,6 +5,8 @@
  *
  * Usage: ./build/bench_arena [N]
  */
+#define _POSIX_C_SOURCE 200809L
+
 #include "arena.h"
 
 #include <stdio.h>

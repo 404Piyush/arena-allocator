@@ -4,6 +4,8 @@
  * small `arena` struct (so the user gets a typed handle); the
  * rest is the bump region.
  */
+#define _POSIX_C_SOURCE 200809L
+
 #include "arena.h"
 
 #include <stdint.h>
