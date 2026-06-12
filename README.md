@@ -1,9 +1,18 @@
 # arena-allocator
 
+[![Website](https://img.shields.io/badge/website-arena--allocator.404piyush.me-a855f7?style=flat-square)](https://arena-allocator.404piyush.me)
+[![Release v1.0.0](https://img.shields.io/badge/release-v1.0.0-22c55e?style=flat-square)](https://github.com/404Piyush/arena-allocator/releases/tag/v1.0.0)
+[![CI](https://img.shields.io/badge/CI-passing-22c55e?style=flat-square)](.github/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-f59e0b?style=flat-square)](LICENSE)
+[![Topics](https://img.shields.io/github/topics/404Piyush/arena-allocator?style=flat-square)](https://github.com/404Piyush/arena-allocator)
+
 A small, dependency-free **bump arena** memory allocator written in
 C11. Single 4 MiB mmap by default, O(1) alloc and free (free is a
 no-op), O(1) reset. Designed for the common "allocate a bunch of
 stuff, throw it all away at the end of the phase" pattern.
+
+**Live site:** [arena-allocator.404piyush.me](https://arena-allocator.404piyush.me) ·
+**See also:** [DEPLOY.md](DEPLOY.md) for the Netlify setup.
 
 This is the v1 allocator from the gpu-engineering curriculum's
 Month 2 "Memory is real" project. It is the simplest correct
