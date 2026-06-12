@@ -17,3 +17,6 @@ build/
 # Generated docs
 docs/html/
 docs/latex/
+
+# Local Netlify folder
+.netlify
