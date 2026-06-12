@@ -20,3 +20,4 @@ docs/latex/
 
 # Local Netlify folder
 .netlify
+.vercel
