@@ -7,7 +7,7 @@
 'use strict';
 
 const CAPACITY = 65536;   /* 64 KiB */
-const arena = arena.create(CAPACITY);
+const myArena = arena.create(CAPACITY);
 
 const elBar      = document.getElementById('pg-bar');
 const elPointer  = document.getElementById('pg-pointer');
@@ -32,9 +32,9 @@ function escapeHtml(s) {
 }
 
 function render() {
-  const inUse = arena.inUse(arena);
-  const high  = arena.highWat(arena);
-  const cap   = arena.cap(arena);
+  const inUse = arena.inUse(myArena);
+  const high  = arena.highWat(myArena);
+  const cap   = arena.cap(myArena);
   const pct   = (inUse / cap) * 100;
 
   elBar.style.width = pct + '%';
@@ -45,7 +45,7 @@ function render() {
 }
 
 function alloc(n) {
-  const r = arena.alloc(arena, n);
+  const r = arena.alloc(myArena, n);
   if (r === null) {
     log(`alloc(${n}): OOM (out of arena capacity)`, 'err');
     return;
@@ -54,12 +54,12 @@ function alloc(n) {
   render();
 }
 function reset() {
-  arena.reset(arena);
+  arena.reset(myArena);
   log('arena_reset()', 'note');
   render();
 }
 function destroy() {
-  arena.destroy(arena);
+  arena.destroy(myArena);
   log('arena_destroy()', 'note');
   render();
 }
@@ -67,9 +67,9 @@ function bench() {
   /* 100k small allocs + reset cycles, in-place. */
   const N = 100000;
   const t0 = performance.now();
-  for (let i = 0; i < N; i++) arena.alloc(arena, 32);
+  for (let i = 0; i < N; i++) arena.alloc(myArena, 32);
   const t1 = performance.now();
-  arena.reset(arena);
+  arena.reset(myArena);
   const t2 = performance.now();
   const allocRate = (N / ((t1 - t0) / 1000)) / 1e6;
   log(`bench: ${N} allocs in ${(t1-t0).toFixed(2)}ms -> ${allocRate.toFixed(1)} M ops/s`, 'ok');
