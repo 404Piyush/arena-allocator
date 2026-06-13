@@ -37,7 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - High-watermark tracking across resets.
 - Test suite: 9 tests, 143 assertions, 0 failures.
 - Microbenchmark: arena vs `malloc`/`free` for 1M small
-  allocations, ~14x faster.
+  allocations, ~14x faster
+  (this depends on the host malloc; on the M-series Mac used
+  to write this changelog the ratio is closer to ~5–7x).
 - Worked example: `examples/parse_demo.c` (tokeniser
   using the arena).
 - CI on Linux + macOS × {clang, gcc}.

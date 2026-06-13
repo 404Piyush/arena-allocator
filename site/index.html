@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>arena-allocator — A bump arena memory allocator in C11</title>
-  <meta name="description" content="A small dependency-free bump arena memory allocator in C11. O(1) alloc, O(1) reset, ~14x faster than malloc for small allocations.">
+  <meta name="description" content="A small dependency-free bump arena memory allocator in C11. O(1) alloc, O(1) reset, ~5x faster than malloc for small allocations on M-series.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -143,21 +143,21 @@ size_t arena_cap      (const arena *a);</code></pre>
   <table>
     <thead><tr><th>Operation</th><th>Rate</th></tr></thead>
     <tbody>
-      <tr><td>arena_alloc (1×int)</td><td>~455 M ops/s</td></tr>
-      <tr><td>malloc / free (1×int)</td><td>~33 M ops/s</td></tr>
-      <tr><td>arena vs malloc</td><td>~14x faster</td></tr>
-      <tr><td>arena_reset</td><td>~0.5 ns</td></tr>
-      <tr><td>1k alloc + 1k reset cycle</td><td>~480 M ops/s</td></tr>
+      <tr><td>arena_alloc (1×int)</td><td>~450 M ops/s</td></tr>
+      <tr><td>arena_reset</td><td>~0.5 ns (one pointer write)</td></tr>
+      <tr><td>malloc / free (1×int)</td><td>~75 M ops/s</td></tr>
+      <tr><td>arena vs malloc</td><td>~5–7x faster</td></tr>
+      <tr><td>1k alloc + 1k reset cycle</td><td>~450 M ops/s</td></tr>
     </tbody>
   </table>
 
   <p>
-    The 14x number is real, not synthetic. It is the cost of all the
+    The speedup is real, not synthetic. It is the cost of all the
     bookkeeping that <code>malloc</code> has to do to support
     per-allocation <code>free</code>: thread-local caches, size
     class buckets, free lists, coalescing. The bump arena does none
-    of that, and the result is that the hot path is the size of the
-    function prologue.
+    of that, and the result is that the hot path is roughly four
+    instructions: align up, bounds check, pointer bump, return.
   </p>
 
   <h2>When to use a bump arena</h2>

@@ -95,18 +95,25 @@ Apple M-series, single thread, `-O2`:
 
 | Operation                 | Rate              |
 |---------------------------|-------------------|
-| `arena_alloc` (1×int)     | ~455 M ops/s      |
-| `arena_reset`             | ~0.5 ns (single pointer write) |
-| `malloc` / `free` (1×int) | ~33 M ops/s       |
-| **arena vs malloc**       | **~14x faster**   |
-| 1k alloc + 1k reset cycle | ~480 M ops/s      |
+| `arena_alloc` (1×int)     | ~450 M ops/s      |
+| `arena_reset`             | ~0.5 ns (one pointer write) |
+| `malloc` / `free` (1×int) | ~75 M ops/s       |
+| **arena vs malloc**       | **~5–7x faster**  |
+| 1k alloc + 1k reset cycle | ~450 M ops/s      |
 
-The 14x number is real, not synthetic. It is the cost of all
+The speedup is real, not synthetic. It is the cost of all
 the bookkeeping that `malloc` has to do to support
 per-allocation `free`: thread-local caches, size class
 buckets, free lists, coalescing. The bump arena does none
-of that, and the result is that the hot path is the size
-of the function prologue.
+of that, and the result is that the hot path is roughly
+four instructions: align up, bounds check, pointer bump,
+return.
+
+The exact ratio varies with what `malloc` is doing under
+the hood. Small allocations on a quiet heap (no contention,
+small fast-path cache) put the gap at ~5x. After a
+fragmentation cycle or under contention the gap widens to
+~14x or more. The arena's hot path is constant.
 
 Run `make bench N=1000000` to reproduce.
 
